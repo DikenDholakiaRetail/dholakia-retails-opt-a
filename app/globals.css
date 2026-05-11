@@ -1,26 +1,275 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Color tokens — achromatic + Electric Blue accent (no warm tones, ever). Spec §1.2. */
+  --color-bg-primary: #FFFFFF;
+  --color-bg-elevated: #F5F5F7;
+  --color-bg-deep: #08203D;
+  --color-bg-inverse: #0B1426;
+
+  --color-text-primary: #0B1426;
+  --color-text-strong: #000000;
+  --color-text-body: #2F3542;
+  --color-text-muted: #6B8AC9;
+  --color-text-inverse: #FFFFFF;
+
+  --color-accent-primary: #3B6FFF;
+  --color-accent-soft: #6B8AC9;
+  --color-accent-deep: #14275C;
+
+  /* Footer-scoped tokens — spec §1.9. */
+  --footer-bg: #0A0E1F;
+  --footer-text-primary: #E8E9ED;
+  --footer-text-muted: #B4BCC9;
+  --footer-accent: #6B8AB8;
+  --footer-divider: rgba(42, 53, 72, 0.30);
+  --footer-border-subtle: rgba(42, 53, 72, 0.70);
+  --footer-surface-hover: #1A2238;
+
+  /* Fonts — wired from next/font in app/layout.tsx */
+  --font-display: var(--font-syne), ui-serif, Georgia, serif;
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, monospace;
+
+  /* Easing standard — expo-out (spec §1.5). */
+  --ease-standard: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Header heights (spec §1.8). */
+  --header-h-desktop: 88px;
+  --header-h-mobile: 64px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  body {
+    background: var(--color-bg-primary);
+    color: var(--color-text-body);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    line-height: 1.7;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-display);
+    color: var(--color-text-primary);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+
+  ::selection {
+    background: var(--color-accent-primary);
+    color: var(--color-text-inverse);
+  }
+
+  /* Skip link — keyboard a11y (spec §1.8). */
+  .skip-link {
+    position: absolute;
+    top: -100px;
+    left: 1rem;
+    z-index: 100;
+    padding: 0.75rem 1rem;
+    background: var(--color-bg-inverse);
+    color: var(--color-text-inverse);
+    border-radius: 2px;
+    font-size: 0.875rem;
+    transition: top 200ms var(--ease-standard);
+  }
+  .skip-link:focus {
+    top: calc(var(--header-h-desktop) + 8px);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-accent-primary);
+  }
+
+  .eyebrow-muted {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .body-lead {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  .hairline {
+    height: 1px;
+    width: 80px;
+    background: var(--color-text-primary);
+    display: inline-block;
+  }
+
+  .container-editorial {
+    max-width: 1280px;
+    margin-inline: auto;
+    padding-inline: clamp(1.25rem, 4vw, 3rem);
+  }
+
+  /* Standard primary CTA — filled Electric Blue (spec §1.4 ButtonHoverFill).
+     Hover: 240ms expo-out fill to Royal Blue. Pure CSS — no magnetic, no JS. */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 48px;
+    padding: 0 1.75rem;
+    border-radius: 2px;
+    background: var(--color-accent-primary);
+    color: var(--color-text-inverse);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background-color 240ms var(--ease-standard),
+      transform 200ms var(--ease-standard);
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background: var(--color-accent-deep);
+  }
+  .btn-primary:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+  }
+  .btn-primary > .arrow {
+    transition: transform 240ms var(--ease-standard);
+  }
+  .btn-primary:hover > .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Ghost outline CTA (spec §1.4). */
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    height: 48px;
+    padding: 0 1.75rem;
+    border-radius: 2px;
+    background: transparent;
+    color: var(--color-accent-primary);
+    border: 1px solid var(--color-accent-primary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: background-color 240ms var(--ease-standard),
+      color 240ms var(--ease-standard),
+      transform 200ms var(--ease-standard);
+    cursor: pointer;
+  }
+  .btn-ghost:hover {
+    background: var(--color-accent-primary);
+    color: var(--color-text-inverse);
+  }
+  .btn-ghost:focus-visible {
+    outline: 2px solid var(--color-accent-primary);
+    outline-offset: 2px;
+  }
+  .btn-ghost:active {
+    transform: scale(0.97);
+  }
+  .btn-ghost > .arrow {
+    transition: transform 240ms var(--ease-standard);
+  }
+  .btn-ghost:hover > .arrow {
+    transform: translateX(4px);
+  }
+
+  /* Inline read-link with sliding arrow (spec §1.4). */
+  .read-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-accent-primary);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    transition: color 240ms var(--ease-standard);
+  }
+  .read-link > .arrow {
+    transition: transform 240ms var(--ease-standard);
+  }
+  .read-link:hover {
+    color: var(--color-accent-deep);
+  }
+  .read-link:hover > .arrow {
+    transform: translateX(4px);
+  }
+
+  /* RowSubtleHighlight (spec §1.4). */
+  .row-subtle {
+    position: relative;
+    transition: padding-left 200ms var(--ease-standard),
+      background-color 200ms var(--ease-standard);
+  }
+  .row-subtle::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: var(--color-accent-primary);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 200ms var(--ease-standard);
+  }
+  .row-subtle:hover {
+    padding-left: 8px;
+    background: rgba(245, 245, 247, 0.5);
+  }
+  .row-subtle:hover::before {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes bob {
+  0%, 100% { transform: translateY(2px); }
+  50%      { transform: translateY(8px); }
+}
+@keyframes kenBurns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.04); }
+}
+
+.fade-up { animation: fadeUp 800ms var(--ease-standard) both; }
+.fade-in { animation: fadeIn 800ms var(--ease-standard) both; }
+.bob     { animation: bob 1.6s ease-in-out infinite; }
+.ken-burns { animation: kenBurns 30s ease-in-out infinite alternate; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
