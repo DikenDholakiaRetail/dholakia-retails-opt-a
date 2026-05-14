@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { unsplashUrl } from "@/lib/media";
 
 /**
  * <HeroVideo> — autoplaying muted looped silent loop with cool-tone filter.
@@ -55,8 +54,6 @@ const OVERLAY_BY_STRENGTH: Record<NonNullable<Props["darkOverlay"]>, string> = {
 export default function HeroVideo({
   src,
   webmSrc,
-  posterImageId,
-  posterImageSrc,
   alt,
   className = "",
   rawTone = false,
@@ -83,19 +80,9 @@ export default function HeroVideo({
     return () => obs.disconnect();
   }, []);
 
-  const posterUrl = posterImageSrc ?? unsplashUrl(posterImageId, 1920, 80);
-
   if (errored) {
     return (
       <>
-        <div
-          aria-label={alt}
-          className={["absolute inset-0 bg-cover bg-center", className].join(" ")}
-          style={{
-            backgroundImage: `url(${posterUrl})`,
-            filter: rawTone ? undefined : EDITORIAL_FILTER,
-          }}
-        />
         {!rawTone && darkOverlay !== "none" && (
           <span
             aria-hidden
@@ -116,7 +103,6 @@ export default function HeroVideo({
         loop
         playsInline
         preload="metadata"
-        poster={posterUrl}
         aria-label={alt}
         className={["absolute inset-0 w-full h-full object-cover", className].join(" ")}
         style={rawTone ? undefined : { filter: EDITORIAL_FILTER }}

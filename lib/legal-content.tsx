@@ -70,8 +70,7 @@ export const PRIVACY_SECTIONS: LegalSection[] = [
     heading: "6. Contact",
     body: (
       <p>
-        Data Protection Officer · Dholakia Retail Private Limited · Plot No. E-03,
-        Gem &amp; Jewellery Park, GHB, Ichhapore, Surat, Gujarat – 394510 ·{" "}
+        Data Protection Officer · Dholakia Retail Private Limited · Dholakia Ventures, Plot No. D-02 and D-11, Gem & Jewellery Park, GHB, Ichchhapor, Surat, Gujarat 394510, India ·{" "}
         <a
           href="mailto:privacy@dholakiaretail.com"
           className="text-[var(--color-accent-primary)] hover:text-[var(--color-accent-deep)] underline-offset-4 hover:underline"
